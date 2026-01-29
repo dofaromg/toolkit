@@ -89,5 +89,104 @@ describe('partner', () => {
 
       expect(result).toBeUndefined()
     })
+
+    it('should return undefined when name is missing', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        version: '1.0.0'
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when name is not a string', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        name: 123
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when name is empty string', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        name: ''
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when version is not a string', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        name: 'test',
+        version: 123
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when data is not an object', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        name: 'test',
+        data: 'not an object'
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when data is an array', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        name: 'test',
+        data: ['array', 'values']
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when data contains non-string values', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        name: 'test',
+        data: {
+          key1: 'value1',
+          key2: 123
+        }
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should accept valid partner info with optional fields', () => {
+      process.env['INPUT_PARTNER-INFO'] = JSON.stringify({
+        name: 'test',
+        version: '1.0.0',
+        data: {
+          key1: 'value1',
+          key2: 'value2'
+        }
+      })
+
+      const result = getPartnerInfo()
+
+      expect(result).toEqual({
+        name: 'test',
+        version: '1.0.0',
+        data: {
+          key1: 'value1',
+          key2: 'value2'
+        }
+      })
+    })
   })
 })
