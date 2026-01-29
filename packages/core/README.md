@@ -263,6 +263,52 @@ var pid = core.getState("pidToKill");
 process.kill(pid);
 ```
 
+#### Partner Actions
+
+You can use the partner utilities to enable coordination between actions in a workflow. This allows actions to register themselves as "partners" and share metadata with other actions.
+
+**Registering as a partner**:
+
+```js
+const core = require('@actions/core');
+
+// Register this action with metadata
+core.registerPartner({
+  name: 'my-action',
+  version: '1.0.0',
+  data: {
+    endpoint: 'https://api.example.com',
+    status: 'ready'
+  }
+});
+```
+
+**Retrieving partner information**:
+
+```js
+const core = require('@actions/core');
+
+// Get partner info from another action (passed via inputs)
+const partnerInfo = core.getPartnerInfo('partner-info');
+if (partnerInfo) {
+  console.log(`Partner: ${partnerInfo.name} v${partnerInfo.version}`);
+  console.log(`Data:`, partnerInfo.data);
+}
+```
+
+In your workflow, you can connect partner actions:
+
+```yaml
+- name: First Action
+  id: partner1
+  uses: ./my-action
+  
+- name: Second Action
+  uses: ./my-other-action
+  with:
+    partner-info: ${{ steps.partner1.outputs.partner-info }}
+```
+
 #### OIDC Token
 
 You can use these methods to interact with the GitHub OIDC provider and get a JWT ID token which would help to get access token from third party cloud providers.

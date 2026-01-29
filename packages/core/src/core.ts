@@ -416,3 +416,8 @@ export {toPosixPath, toWin32Path, toPlatformPath} from './path-utils'
  * Platform utilities exports
  */
 export * as platform from './platform'
+
+/**
+ * Partner utilities exports
+ */
+export {registerPartner, getPartnerInfo, PartnerMetadata} from './partner'
